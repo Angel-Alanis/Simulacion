@@ -5,11 +5,12 @@ Sistema de evaluación de nivel de inglés con exámenes de práctica y finales.
 ## Descripción
 
 Aplicación web para realizar exámenes de inglés:
-- Exámenes de práctica: 20 preguntas, 5 intentos
-- Exámenes finales: 40 preguntas, 2 intentos
-- 6 niveles: Beginner, Elementary, Pre-intermediate, Intermediate, Upper-intermediate, Advanced
+- Exámenes de práctica: 20 preguntas, 5 intentos, 5pts c/u
+- Exámenes finales: 40 preguntas, 2 intentos, 2.5pts c/u
+- 3 niveles: Básico (0-69%), Intermedio (70-84%), Avanzado (85-100%)
 - Estadísticas y dashboard con gráficas
 - Timer de 1 minuto por pregunta
+- 70% para aprobar
 
 ## Tecnologías
 
@@ -21,20 +22,27 @@ Aplicación web para realizar exámenes de inglés:
 
 **Requisitos:** Node.js 16+, SQL Server 2017+, Angular CLI
 
-### Backend
+### Primera vez o después de cambios en BD
 ```powershell
 cd backend
-npm install
 # Configurar .env con credenciales de SQL Server
-# Ejecutar database/schema.sql en SQL Server
-npm run seed
-npm run dev
+.\reset-and-seed.ps1
 ```
 
-### Frontend
+### Iniciar proyecto
 ```powershell
+# Desde la raíz del proyecto
+.\INICIAR-PROYECTO.ps1
+```
+
+O manualmente:
+```powershell
+# Backend
+cd backend
+npm run dev
+
+# Frontend (en otra terminal)
 cd frontend
-npm install
 ng serve
 ```
 
@@ -43,7 +51,8 @@ Acceso: Frontend en `http://localhost:4200`, Backend en `http://localhost:3000`
 ## Base de Datos
 
 8 tablas: Levels, Questions, Users, ExamTypes, Exams, UserAnswers, ExamQuestions, UserStatistics  
-80 preguntas distribuidas en 6 niveles
+80 preguntas distribuidas en 3 niveles (Básico: 30, Intermedio: 30, Avanzado: 20)  
+Clasificación por porcentaje: Básico (0-69%), Intermedio (70-84%), Avanzado (85-100%)
 
 ## Funcionalidades
 

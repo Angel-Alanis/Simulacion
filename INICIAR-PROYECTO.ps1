@@ -1,6 +1,7 @@
-# Script para iniciar el proyecto completo
+# Iniciar proyecto completo
 Write-Host "========================================" -ForegroundColor Cyan
-Write-Host "  INICIANDO SIMULADOR ORDI" -ForegroundColor Cyan
+Write-Host "  SIMULADOR DE EXAMEN DE INGLES" -ForegroundColor Cyan
+Write-Host "  3 Niveles: Basico, Intermedio, Avanzado" -ForegroundColor White
 Write-Host "========================================`n" -ForegroundColor Cyan
 
 # Navegar al directorio del proyecto

@@ -11,13 +11,13 @@ GO
 USE EnglishExamDB;
 GO
 
--- Tabla de Niveles
+-- Tabla de Niveles (3 niveles: Basico, Intermedio, Avanzado)
 CREATE TABLE Levels (
     level_id INT PRIMARY KEY IDENTITY(1,1),
     level_name VARCHAR(50) NOT NULL UNIQUE,
     level_order INT NOT NULL,
-    min_questions INT NOT NULL,
-    max_failures INT NOT NULL,
+    min_percentage DECIMAL(5,2) NOT NULL,
+    max_percentage DECIMAL(5,2) NOT NULL,
     description VARCHAR(255),
     created_at DATETIME DEFAULT GETDATE()
 );
@@ -134,6 +134,7 @@ CREATE INDEX IX_Exams_Type ON Exams(exam_type_id);
 CREATE INDEX IX_UserAnswers_Exam ON UserAnswers(exam_id);
 CREATE INDEX IX_UserAnswers_Question ON UserAnswers(question_id);
 CREATE INDEX IX_ExamQuestions_Exam ON ExamQuestions(exam_id);
+GO
 
 -- Vista para estadísticas del dashboard
 CREATE VIEW vw_DashboardStats AS

@@ -140,35 +140,19 @@ class ExamModel {
       const percentage = (totalScore / (total_answers * exam.points_per_question)) * 100;
       const passed = percentage >= exam.passing_score;
       
-      // Determinar nivel alcanzado
+      // Determinar nivel alcanzado basado en porcentaje
+      // Basico: 0-69%, Intermedio: 70-84%, Avanzado: 85-100%
       let levelAchievedId = null;
-      if (passed) {
-        // Analizar respuestas por nivel para determinar el nivel alcanzado
-        const levelAnalysis = await pool.request()
-          .input('examId', sql.Int, examId)
-          .query(`
-            SELECT 
-              l.level_id,
-              l.level_name,
-              l.level_order,
-              l.max_failures,
-              COUNT(*) as total_questions,
-              SUM(CASE WHEN ua.is_correct = 0 THEN 1 ELSE 0 END) as failures
-            FROM UserAnswers ua
-            INNER JOIN Questions q ON ua.question_id = q.question_id
-            INNER JOIN Levels l ON q.level_id = l.level_id
-            WHERE ua.exam_id = @examId
-            GROUP BY l.level_id, l.level_name, l.level_order, l.max_failures
-            ORDER BY l.level_order DESC
-          `);
-        
-        // Determinar el nivel más alto alcanzado
-        for (const level of levelAnalysis.recordset) {
-          if (level.failures <= level.max_failures) {
-            levelAchievedId = level.level_id;
-            break;
-          }
-        }
+      const levelResult = await pool.request()
+        .input('percentage', sql.Decimal(5, 2), percentage)
+        .query(`
+          SELECT level_id, level_name
+          FROM Levels
+          WHERE @percentage >= min_percentage AND @percentage <= max_percentage
+        `);
+      
+      if (levelResult.recordset.length > 0) {
+        levelAchievedId = levelResult.recordset[0].level_id;
       }
       
       // Actualizar examen
@@ -192,8 +176,8 @@ class ExamModel {
       // Actualizar estadísticas del usuario
       await this.updateUserStatistics(exam.user_id, exam.type_name, percentage);
       
-      // Si pasó el examen, actualizar el nivel del usuario
-      if (passed && levelAchievedId) {
+      // Actualizar el nivel del usuario si alcanzó un nivel
+      if (levelAchievedId) {
         const UserModel = require('./user.model');
         await UserModel.updateLevel(exam.user_id, levelAchievedId);
       }
