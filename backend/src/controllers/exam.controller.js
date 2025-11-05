@@ -2,13 +2,13 @@ const ExamModel = require('../models/exam.model');
 const UserModel = require('../models/user.model');
 
 class ExamController {
-  // Iniciar nuevo examen
+  // Crear y comenzar un examen
   static async startExam(req, res) {
     try {
       const userId = req.user.userId;
-      const { examType } = req.body; // 'Practice' o 'Final'
+      const { examType } = req.body;
 
-      // Obtener tipo de examen
+      // Validar tipo de examen
       const examTypeData = await ExamModel.getExamTypeByName(examType);
       if (!examTypeData) {
         return res.status(400).json({
@@ -17,7 +17,7 @@ class ExamController {
         });
       }
 
-      // Verificar intentos disponibles
+      // Verificar límite de intentos
       const attempts = await ExamModel.getUserAttempts(userId, examType);
       if (attempts >= examTypeData.max_attempts) {
         return res.status(400).json({
@@ -26,17 +26,17 @@ class ExamController {
         });
       }
 
-      // Crear examen
+      // Crear registro del examen
       const exam = await ExamModel.create({
         userId,
         examTypeId: examTypeData.exam_type_id,
         attemptNumber: attempts + 1
       });
 
-      // Asignar preguntas aleatorias
+      // Seleccionar preguntas al azar
       await ExamModel.assignRandomQuestions(exam.exam_id, examTypeData.total_questions);
 
-      // Obtener preguntas (sin mostrar respuestas correctas)
+      // Obtener preguntas sin respuestas correctas
       const questions = await ExamModel.getExamQuestions(exam.exam_id);
       
       const questionsWithoutAnswers = questions.map(q => ({
@@ -79,13 +79,13 @@ class ExamController {
     }
   }
 
-  // Enviar respuesta
+  // Guardar respuesta del usuario
   static async submitAnswer(req, res) {
     try {
       const { examId, questionId, selectedAnswer, timeTakenSeconds } = req.body;
       const userId = req.user.userId;
 
-      // Verificar que el examen pertenece al usuario
+      // Validar que el examen es del usuario
       const exam = await ExamModel.findById(examId);
       if (!exam || exam.user_id !== userId) {
         return res.status(403).json({
@@ -101,11 +101,11 @@ class ExamController {
         });
       }
 
-      // Guardar respuesta
+      // Registrar respuesta en BD
       const answer = await ExamModel.saveAnswer({
         examId,
         questionId,
-        selectedAnswer: selectedAnswer || 'x', // 'x' para timeout
+        selectedAnswer: selectedAnswer || 'x',
         timeTakenSeconds
       });
 
@@ -127,13 +127,13 @@ class ExamController {
     }
   }
 
-  // Finalizar examen
+  // Completar y calcular resultados del examen
   static async finishExam(req, res) {
     try {
       const { examId } = req.body;
       const userId = req.user.userId;
 
-      // Verificar que el examen pertenece al usuario
+      // Validar que el examen es del usuario
       const exam = await ExamModel.findById(examId);
       if (!exam || exam.user_id !== userId) {
         return res.status(403).json({

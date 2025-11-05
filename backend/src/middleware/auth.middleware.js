@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 
 const authMiddleware = (req, res, next) => {
   try {
-    // Obtener token del header
+    // Extraer token del header
     const authHeader = req.headers.authorization;
     
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -12,12 +12,12 @@ const authMiddleware = (req, res, next) => {
       });
     }
 
-    const token = authHeader.substring(7); // Remover 'Bearer '
+    const token = authHeader.substring(7);
 
-    // Verificar token
+    // Validar token JWT
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     
-    // Agregar información del usuario a la request
+    // Guardar datos del usuario en request
     req.user = decoded;
     
     next();

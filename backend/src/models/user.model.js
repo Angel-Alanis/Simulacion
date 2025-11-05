@@ -2,7 +2,7 @@ const { getConnection, sql } = require('../config/database');
 const bcrypt = require('bcryptjs');
 
 class UserModel {
-  // Crear usuario
+  // Insertar usuario en BD
   static async create(userData) {
     try {
       const pool = await getConnection();
@@ -25,7 +25,7 @@ class UserModel {
     }
   }
 
-  // Buscar usuario por username
+  // Buscar por nombre de usuario
   static async findByUsername(username) {
     try {
       const pool = await getConnection();
@@ -39,7 +39,7 @@ class UserModel {
     }
   }
 
-  // Buscar usuario por email
+  // Buscar por email
   static async findByEmail(email) {
     try {
       const pool = await getConnection();
@@ -53,7 +53,7 @@ class UserModel {
     }
   }
 
-  // Buscar usuario por ID
+  // Buscar por ID
   static async findById(userId) {
     try {
       const pool = await getConnection();
@@ -72,7 +72,7 @@ class UserModel {
     }
   }
 
-  // Actualizar nivel del usuario
+  // Cambiar nivel del usuario
   static async updateLevel(userId, levelId) {
     try {
       const pool = await getConnection();
@@ -91,23 +91,23 @@ class UserModel {
     }
   }
 
-  // Verificar contraseña
+  // Comparar contraseñas
   static async verifyPassword(plainPassword, hashedPassword) {
     return await bcrypt.compare(plainPassword, hashedPassword);
   }
 
-  // Obtener o crear estadísticas del usuario
+  // Obtener o inicializar estadísticas
   static async getOrCreateStats(userId) {
     try {
       const pool = await getConnection();
       
-      // Verificar si existen estadísticas
+      // Buscar estadísticas existentes
       let result = await pool.request()
         .input('userId', sql.Int, userId)
         .query('SELECT * FROM UserStatistics WHERE user_id = @userId');
       
       if (result.recordset.length === 0) {
-        // Crear estadísticas
+        // Crear si no existen
         result = await pool.request()
           .input('userId', sql.Int, userId)
           .query(`

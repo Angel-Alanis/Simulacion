@@ -1,16 +1,16 @@
 const sql = require('mssql');
 require('dotenv').config();
 
-// Configuración para Windows Authentication o SQL Server Authentication
+// Configuración de conexión a SQL Server
 const config = {
   server: process.env.DB_SERVER || 'localhost',
   database: process.env.DB_DATABASE,
-  port: 1433, // Puerto TCP/IP estándar
+  port: 1433,
   options: {
     encrypt: false,
     trustServerCertificate: true,
     enableArithAbort: true,
-    trustedConnection: process.env.DB_USE_WINDOWS_AUTH === 'true', // Windows Authentication
+    trustedConnection: process.env.DB_USE_WINDOWS_AUTH === 'true',
     useUTC: false
   },
   pool: {
@@ -22,7 +22,7 @@ const config = {
   requestTimeout: 30000
 };
 
-// Si NO es Windows Authentication, agregar user y password
+// Autenticación SQL Server o Windows
 if (process.env.DB_USE_WINDOWS_AUTH !== 'true') {
   config.authentication = {
     type: 'default',

@@ -22,7 +22,7 @@ export class LoginComponent implements OnInit {
     private route: ActivatedRoute,
     private toastr: ToastrService
   ) {
-    // Redirect to dashboard if already logged in
+    // Redirigir si ya hay sesión activa
     if (this.authService.isAuthenticated()) {
       this.router.navigate(['/dashboard']);
     }
@@ -34,7 +34,7 @@ export class LoginComponent implements OnInit {
       password: ['', [Validators.required, Validators.minLength(6)]]
     });
 
-    // Get return url from route parameters or default to '/dashboard'
+    // Obtener URL de retorno o usar dashboard por defecto
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/dashboard';
   }
 

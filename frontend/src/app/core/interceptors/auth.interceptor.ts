@@ -19,7 +19,7 @@ export class AuthInterceptor implements HttpInterceptor {
   ) {}
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    // Agregar token de autenticación si existe
+    // Añadir token JWT en header si existe
     const token = this.authService.token;
     if (token) {
       request = request.clone({
@@ -32,7 +32,7 @@ export class AuthInterceptor implements HttpInterceptor {
     return next.handle(request).pipe(
       catchError((error: HttpErrorResponse) => {
         if (error.status === 401) {
-          // Token inválido o expirado
+          // Cerrar sesión si el token no es válido
           this.authService.logout();
           this.router.navigate(['/login']);
         }

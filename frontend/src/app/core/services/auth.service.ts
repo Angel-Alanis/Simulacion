@@ -85,14 +85,14 @@ export class AuthService {
 
     try {
       const decoded: any = jwtDecode(token);
-      // Verificar si el token no ha expirado
+      // Validar que el token no esté expirado
       const currentTime = Date.now() / 1000;
       if (decoded.exp < currentTime) {
         localStorage.removeItem(this.tokenKey);
         return null;
       }
       
-      // Retornar información básica del usuario
+      // Extraer datos del usuario del token
       return {
         userId: decoded.userId,
         username: decoded.username,

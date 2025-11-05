@@ -2,12 +2,12 @@ const UserModel = require('../models/user.model');
 const jwt = require('jsonwebtoken');
 
 class UserController {
-  // Registro de usuario
+  // Registrar nuevo usuario
   static async register(req, res) {
     try {
       const { username, email, password, fullName } = req.body;
 
-      // Validar que no exista el usuario
+      // Verificar si el username ya existe
       const existingUser = await UserModel.findByUsername(username);
       if (existingUser) {
         return res.status(400).json({
@@ -16,7 +16,7 @@ class UserController {
         });
       }
 
-      // Validar que no exista el email
+      // Verificar si el email ya existe
       const existingEmail = await UserModel.findByEmail(email);
       if (existingEmail) {
         return res.status(400).json({
@@ -25,7 +25,7 @@ class UserController {
         });
       }
 
-      // Crear usuario
+      // Crear nuevo usuario en BD
       const user = await UserModel.create({
         username,
         email,
@@ -33,10 +33,10 @@ class UserController {
         fullName
       });
 
-      // Crear estadísticas iniciales
+      // Inicializar estadísticas del usuario
       await UserModel.getOrCreateStats(user.user_id);
 
-      // Generar token
+      // Generar token de autenticación
       const token = jwt.sign(
         { userId: user.user_id, username: user.username },
         process.env.JWT_SECRET,
@@ -66,7 +66,7 @@ class UserController {
     }
   }
 
-  // Login de usuario
+  // Iniciar sesión
   static async login(req, res) {
     try {
       const { username, password } = req.body;
@@ -76,7 +76,6 @@ class UserController {
       // Buscar usuario por username o email
       let user = await UserModel.findByUsername(username);
       if (!user) {
-        // Si no se encuentra por username, buscar por email
         user = await UserModel.findByEmail(username);
       }
       
@@ -89,7 +88,7 @@ class UserController {
         });
       }
 
-      // Verificar contraseña
+      // Validar contraseña
       const isValidPassword = await UserModel.verifyPassword(password, user.password_hash);
       if (!isValidPassword) {
         return res.status(401).json({
@@ -98,7 +97,7 @@ class UserController {
         });
       }
 
-      // Generar token
+      // Crear token de sesión
       const token = jwt.sign(
         { userId: user.user_id, username: user.username },
         process.env.JWT_SECRET,
@@ -129,7 +128,7 @@ class UserController {
     }
   }
 
-  // Obtener perfil de usuario
+  // Obtener datos del perfil
   static async getProfile(req, res) {
     try {
       const userId = req.user.userId;

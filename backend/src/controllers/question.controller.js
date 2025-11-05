@@ -1,7 +1,7 @@
 const QuestionModel = require('../models/question.model');
 
 class QuestionController {
-  // Obtener todas las preguntas (solo para admin/desarrollo)
+  // Listar todas las preguntas
   static async getAll(req, res) {
     try {
       const questions = await QuestionModel.getAll();
@@ -20,7 +20,7 @@ class QuestionController {
     }
   }
 
-  // Obtener preguntas por nivel
+  // Filtrar preguntas por nivel
   static async getByLevel(req, res) {
     try {
       const { levelName } = req.params;
@@ -41,7 +41,7 @@ class QuestionController {
     }
   }
 
-  // Obtener todos los niveles
+  // Obtener listado de niveles
   static async getAllLevels(req, res) {
     try {
       const levels = await QuestionModel.getAllLevels();
@@ -60,7 +60,7 @@ class QuestionController {
     }
   }
 
-  // Obtener pregunta por ID
+  // Buscar pregunta específica
   static async getById(req, res) {
     try {
       const { questionId } = req.params;

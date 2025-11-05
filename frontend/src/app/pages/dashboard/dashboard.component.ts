@@ -71,23 +71,23 @@ export class DashboardComponent implements OnInit {
         if (response.success && response.data) {
           this.stats = response.data;
           
-          // Mapear recentHistory a recentExams para el template
+          // Mapear historial reciente
           if (this.stats.recentHistory) {
             this.stats.recentExams = this.stats.recentHistory;
           }
           
-          // Calcular totalExams, averageScore, bestScore desde userStatistics
+          // Calcular estadísticas totales
           if (this.stats.userStatistics) {
             const us = this.stats.userStatistics;
             this.stats.totalExams = (us.total_practice_attempts || 0) + (us.total_final_attempts || 0);
             
-            // Calcular promedio ponderado
+            // Promedio ponderado de puntajes
             const practiceTotal = (us.average_practice_score || 0) * (us.total_practice_attempts || 0);
             const finalTotal = (us.average_final_score || 0) * (us.total_final_attempts || 0);
             const totalAttempts = (us.total_practice_attempts || 0) + (us.total_final_attempts || 0);
             this.stats.averageScore = totalAttempts > 0 ? Math.round((practiceTotal + finalTotal) / totalAttempts) : 0;
             
-            // Mejor score entre práctica y final
+            // Mejor puntaje obtenido
             this.stats.bestScore = Math.max(us.best_practice_score || 0, us.best_final_score || 0);
           }
           
@@ -103,11 +103,11 @@ export class DashboardComponent implements OnInit {
   }
 
   loadCharts(): void {
-    // Load progress chart
+    // Cargar gráfica de progreso
     this.dashboardService.getProgressCharts().subscribe({
       next: (response) => {
         if (response.success && response.data) {
-          // Transformar progressOverTime en arrays de dates y scores
+          // Convertir datos de progreso a formato de gráfica
           const progressData = response.data.progressOverTime || [];
           const dates = progressData.map((item: any) => {
             const date = new Date(item.start_time);
@@ -131,7 +131,7 @@ export class DashboardComponent implements OnInit {
       error: (error: any) => console.error('Error loading progress chart:', error)
     });
 
-    // Load practice vs final analysis - usar attemptsComparison del dashboard stats
+    // Cargar análisis de práctica vs final
     if (this.stats?.attemptsComparison) {
       const practiceData = this.stats.attemptsComparison.find((a) => a.type_name === 'Practice');
       const finalData = this.stats.attemptsComparison.find((a) => a.type_name === 'Final');

@@ -1,18 +1,18 @@
 const { getConnection, sql } = require('../config/database');
 
 class DashboardController {
-  // Obtener estadísticas generales del dashboard
+  // Obtener métricas del dashboard
   static async getStatistics(req, res) {
     try {
       const userId = req.user.userId;
       const pool = await getConnection();
 
-      // Estadísticas del usuario
+      // Estadísticas generales
       const userStats = await pool.request()
         .input('userId', sql.Int, userId)
         .query('SELECT * FROM vw_DashboardStats WHERE user_id = @userId');
 
-      // Intentos de práctica vs finales
+      // Comparación entre exámenes de práctica y finales
       const attemptsComparison = await pool.request()
         .input('userId', sql.Int, userId)
         .query(`
@@ -28,7 +28,7 @@ class DashboardController {
           GROUP BY et.type_name
         `);
 
-      // Progreso por nivel
+      // Rendimiento por nivel
       const levelProgress = await pool.request()
         .input('userId', sql.Int, userId)
         .query(`
@@ -46,7 +46,7 @@ class DashboardController {
           ORDER BY l.level_order
         `);
 
-      // Beneficio de práctica - Comparar primer intento de práctica vs primer intento final
+      // Comparación de puntajes entre primer intento de práctica y final
       const practiceBenefit = await pool.request()
         .input('userId', sql.Int, userId)
         .query(`
@@ -69,7 +69,7 @@ class DashboardController {
             ISNULL((SELECT percentage FROM FinalFirst), 0) as first_final_score
         `);
 
-      // Historial reciente
+      // Últimos 10 exámenes realizados
       const recentHistory = await pool.request()
         .input('userId', sql.Int, userId)
         .query(`
@@ -88,7 +88,7 @@ class DashboardController {
           ORDER BY e.start_time DESC
         `);
 
-      // Tiempo promedio por pregunta
+      // Tiempo promedio de respuesta
       const avgTime = await pool.request()
         .input('userId', sql.Int, userId)
         .query(`
