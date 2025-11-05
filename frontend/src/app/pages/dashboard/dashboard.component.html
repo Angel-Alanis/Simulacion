@@ -1,0 +1,193 @@
+<div class="dashboard-container">
+  <!-- Navbar -->
+  <mat-toolbar color="primary">
+    <span>English Exam Simulator</span>
+    <span class="spacer"></span>
+    <span *ngIf="currentUser">Welcome, {{ currentUser.name }}!</span>
+    <button mat-icon-button [matMenuTriggerFor]="menu">
+      <mat-icon>account_circle</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item routerLink="/profile">
+        <mat-icon>person</mat-icon>
+        <span>Profile</span>
+      </button>
+      <button mat-menu-item routerLink="/history">
+        <mat-icon>history</mat-icon>
+        <span>Exam History</span>
+      </button>
+      <mat-divider></mat-divider>
+      <button mat-menu-item (click)="logout()">
+        <mat-icon>exit_to_app</mat-icon>
+        <span>Logout</span>
+      </button>
+    </mat-menu>
+  </mat-toolbar>
+
+  <!-- Main Content -->
+  <div class="content" *ngIf="!loading; else loadingTemplate">
+    <!-- User Stats Cards -->
+    <div class="stats-grid">
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-icon primary">
+            <mat-icon>school</mat-icon>
+          </div>
+          <h2>{{ currentUser?.currentLevel || 'N/A' }}</h2>
+          <p>Current Level</p>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-icon success">
+            <mat-icon>assignment_turned_in</mat-icon>
+          </div>
+          <h2>{{ stats?.totalExams || 0 }}</h2>
+          <p>Total Exams</p>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-icon warning">
+            <mat-icon>trending_up</mat-icon>
+          </div>
+          <h2>{{ stats?.averageScore || 0 }}%</h2>
+          <p>Average Score</p>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-icon info">
+            <mat-icon>stars</mat-icon>
+          </div>
+          <h2>{{ stats?.bestScore || 0 }}%</h2>
+          <p>Best Score</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- Action Cards -->
+    <div class="action-grid">
+      <mat-card class="action-card practice-card">
+        <mat-card-header>
+          <mat-card-title>Practice Exam</mat-card-title>
+          <mat-card-subtitle>20 questions • 5 attempts remaining</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <p>Test your knowledge with a practice exam. You can attempt this up to 5 times.</p>
+          <div class="stats-row">
+            <div class="stat-item">
+              <mat-icon>timer</mat-icon>
+              <span>20 minutes</span>
+            </div>
+            <div class="stat-item">
+              <mat-icon>help_outline</mat-icon>
+              <span>20 questions</span>
+            </div>
+          </div>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-raised-button color="primary" (click)="startPracticeExam()">
+            Start Practice
+          </button>
+        </mat-card-actions>
+      </mat-card>
+
+      <mat-card class="action-card final-card">
+        <mat-card-header>
+          <mat-card-title>Final Exam</mat-card-title>
+          <mat-card-subtitle>40 questions • 2 attempts remaining</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <p>Take the final exam to determine your English level. You have 2 attempts.</p>
+          <div class="stats-row">
+            <div class="stat-item">
+              <mat-icon>timer</mat-icon>
+              <span>40 minutes</span>
+            </div>
+            <div class="stat-item">
+              <mat-icon>help_outline</mat-icon>
+              <span>40 questions</span>
+            </div>
+          </div>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-raised-button color="accent" (click)="startFinalExam()">
+            Start Final
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+
+    <!-- Charts -->
+    <div class="charts-grid">
+      <mat-card class="chart-card">
+        <mat-card-header>
+          <mat-card-title>Progress Over Time</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <canvas baseChart
+            [data]="lineChartData"
+            [options]="lineChartOptions"
+            type="line">
+          </canvas>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="chart-card">
+        <mat-card-header>
+          <mat-card-title>Practice vs Final Performance</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <canvas baseChart
+            [data]="barChartData"
+            [options]="barChartOptions"
+            type="bar">
+          </canvas>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    
+    
+
+    <!-- Recent Activity -->
+    <mat-card class="recent-activity">
+      <mat-card-header>
+        <mat-card-title>Recent Activity</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p *ngIf="!stats?.recentExams || stats?.recentExams?.length === 0" class="no-data">
+          No recent exam activity
+        </p>
+        <div *ngFor="let exam of stats?.recentExams" class="activity-item">
+          <mat-icon [class]="exam.passed ? 'success-icon' : 'error-icon'">
+            {{ exam.passed ? 'check_circle' : 'cancel' }}
+          </mat-icon>
+          <div class="activity-details">
+            <h4>{{ exam.examType }} Exam</h4>
+            <p>Score: {{ exam.percentage || exam.totalScore || 0 }}% • {{ exam.startTime | date: 'medium' }}</p>
+          </div>
+          <mat-chip [class]="exam.passed ? 'pass-chip' : 'fail-chip'">
+            {{ exam.passed ? 'Passed' : 'Failed' }}
+          </mat-chip>
+        </div>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button color="primary" (click)="viewHistory()">
+          View All History
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+
+  <!-- Loading Template -->
+  <ng-template #loadingTemplate>
+    <div class="loading-container">
+      <mat-spinner></mat-spinner>
+      <p>Loading dashboard...</p>
+    </div>
+  </ng-template>
+</div>

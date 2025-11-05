@@ -1,0 +1,175 @@
+# ============================================
+# ENGLISH EXAM SIMULATOR - .gitignore
+# ============================================
+
+# ============================================
+# BACKEND (Node.js)
+# ============================================
+
+# Dependencies
+backend/node_modules/
+backend/package-lock.json
+
+# Environment variables
+backend/.env
+
+# Logs
+backend/logs
+backend/*.log
+backend/npm-debug.log*
+backend/yarn-debug.log*
+backend/yarn-error.log*
+backend/lerna-debug.log*
+
+# OS
+backend/.DS_Store
+backend/Thumbs.db
+
+# IDE
+backend/.vscode/
+backend/.idea/
+backend/*.swp
+backend/*.swo
+backend/*~
+
+# Testing
+backend/coverage/
+backend/.nyc_output/
+
+# Build
+backend/dist/
+backend/build/
+
+# ============================================
+# FRONTEND (Angular)
+# ============================================
+
+# Dependencies
+frontend/node_modules/
+frontend/package-lock.json
+
+# Build
+frontend/dist/
+frontend/tmp/
+frontend/out-tsc/
+frontend/bazel-out/
+
+# Profiling
+frontend/chrome-profiler-events*.json
+
+# IDEs and editors
+frontend/.idea/
+frontend/.project
+frontend/.classpath
+frontend/.c9/
+frontend/*.launch
+frontend/.settings/
+frontend/*.sublime-workspace
+frontend/.vscode/*
+!frontend/.vscode/settings.json
+!frontend/.vscode/tasks.json
+!frontend/.vscode/launch.json
+!frontend/.vscode/extensions.json
+frontend/.history/*
+
+# Miscellaneous
+frontend/.angular/
+frontend/.sass-cache/
+frontend/connect.lock
+frontend/coverage/
+frontend/libpeerconnection.log
+frontend/testem.log
+frontend/typings/
+
+# System files
+frontend/.DS_Store
+frontend/Thumbs.db
+
+# ============================================
+# GLOBAL
+# ============================================
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.old
+*.orig
+
+# ============================================
+# DATABASE
+# ============================================
+
+# SQL Server
+*.mdf
+*.ldf
+*.ndf
+
+# Database backups
+*.bak
+*.backup
+
+# ============================================
+# DOCUMENTATION (Keep these!)
+# ============================================
+
+# Keep all markdown documentation
+!README.md
+!*.md
+
+# ============================================
+# SCRIPTS (Keep these!)
+# ============================================
+
+# Keep PowerShell scripts
+!*.ps1
+!*.sh
+
+# ============================================
+# PROJECT SPECIFIC
+# ============================================
+
+# Keep example files
+!.env.example
+!*.example
+
+# Ignore personal notes
+NOTES.md
+TODO.md
+personal/
+scratch/
+
+# ============================================
+# END
+# ============================================
