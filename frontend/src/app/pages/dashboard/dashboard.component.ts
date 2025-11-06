@@ -14,6 +14,8 @@ export class DashboardComponent implements OnInit {
   currentUser: User | null = null;
   stats: DashboardStats | null = null;
   loading = true;
+  practiceAttemptsRemaining = 5;
+  finalAttemptsRemaining = 2;
 
   // Chart configurations
   public lineChartData: ChartConfiguration<'line'>['data'] = {
@@ -69,7 +71,20 @@ export class DashboardComponent implements OnInit {
     this.dashboardService.getStatistics().subscribe({
       next: (response) => {
         if (response.success && response.data) {
+          if (response.data.user) {
+            this.currentUser = response.data.user;
+          }
           this.stats = response.data;
+          
+          // Obtener intentos restantes
+          if ((this.stats as any).examAttempts) {
+            const examAttempts = (this.stats as any).examAttempts;
+            const practiceAttempt = examAttempts.find((a: any) => a.type_name === 'Practice');
+            const finalAttempt = examAttempts.find((a: any) => a.type_name === 'Final');
+            
+            this.practiceAttemptsRemaining = practiceAttempt?.attempts_remaining || 5;
+            this.finalAttemptsRemaining = finalAttempt?.attempts_remaining || 2;
+          }
           
           // Mapear historial reciente
           if (this.stats.recentHistory) {

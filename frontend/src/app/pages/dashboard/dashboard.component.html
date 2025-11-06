@@ -3,7 +3,7 @@
   <mat-toolbar color="primary">
     <span>English Exam Simulator</span>
     <span class="spacer"></span>
-    <span *ngIf="currentUser">Welcome, {{ currentUser.name }}!</span>
+    <span *ngIf="currentUser">Welcome, {{ currentUser.fullName || currentUser.username }}!</span>
     <button mat-icon-button [matMenuTriggerFor]="menu">
       <mat-icon>account_circle</mat-icon>
     </button>
@@ -74,7 +74,7 @@
       <mat-card class="action-card practice-card">
         <mat-card-header>
           <mat-card-title>Practice Exam</mat-card-title>
-          <mat-card-subtitle>20 questions • 5 attempts remaining</mat-card-subtitle>
+          <mat-card-subtitle>20 questions • {{ practiceAttemptsRemaining }} attempts remaining</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
           <p>Test your knowledge with a practice exam. You can attempt this up to 5 times.</p>
@@ -99,7 +99,7 @@
       <mat-card class="action-card final-card">
         <mat-card-header>
           <mat-card-title>Final Exam</mat-card-title>
-          <mat-card-subtitle>40 questions • 2 attempts remaining</mat-card-subtitle>
+          <mat-card-subtitle>40 questions • {{ finalAttemptsRemaining }} attempts remaining</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
           <p>Take the final exam to determine your English level. You have 2 attempts.</p>

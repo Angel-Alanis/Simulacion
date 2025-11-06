@@ -6,7 +6,7 @@ class ExamController {
   static async startExam(req, res) {
     try {
       const userId = req.user.userId;
-      const { examType } = req.body;
+      const { examType, levelId } = req.body;
 
       // Validar tipo de examen
       const examTypeData = await ExamModel.getExamTypeByName(examType);
@@ -33,8 +33,9 @@ class ExamController {
         attemptNumber: attempts + 1
       });
 
-      // Seleccionar preguntas al azar
-      await ExamModel.assignRandomQuestions(exam.exam_id, examTypeData.total_questions);
+      // Seleccionar preguntas al azar (con nivel específico si es Practice)
+      const levelForQuestions = examType === 'Practice' ? levelId : null;
+      await ExamModel.assignRandomQuestions(exam.exam_id, examTypeData.total_questions, levelForQuestions);
 
       // Obtener preguntas sin respuestas correctas
       const questions = await ExamModel.getExamQuestions(exam.exam_id);

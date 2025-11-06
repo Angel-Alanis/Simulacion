@@ -135,6 +135,7 @@ export interface UserStatistics {
 }
 
 export interface DashboardStats {
+  user?: User;
   userStatistics: UserStatistics;
   attemptsComparison: AttemptsComparison[];
   levelProgress: LevelProgress[];

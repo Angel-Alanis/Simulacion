@@ -23,20 +23,49 @@ class ExamModel {
   }
 
   // Asignar preguntas aleatorias al examen
-  static async assignRandomQuestions(examId, questionCount) {
+  static async assignRandomQuestions(examId, questionCount, levelId = null) {
     try {
       const pool = await getConnection();
       
-      // Obtener preguntas aleatorias de todos los niveles
-      await pool.request()
-        .input('examId', sql.Int, examId)
-        .input('questionCount', sql.Int, questionCount)
-        .query(`
-          INSERT INTO ExamQuestions (exam_id, question_id, question_order)
-          SELECT TOP (@questionCount) @examId, question_id, ROW_NUMBER() OVER (ORDER BY NEWID())
-          FROM Questions
-          ORDER BY NEWID()
-        `);
+      // Si hay nivel específico, obtener preguntas solo de ese nivel
+      if (levelId) {
+        await pool.request()
+          .input('examId', sql.Int, examId)
+          .input('questionCount', sql.Int, questionCount)
+          .input('levelId', sql.Int, levelId)
+          .query(`
+            WITH RandomQuestions AS (
+              SELECT TOP (@questionCount) 
+                question_id,
+                ROW_NUMBER() OVER (ORDER BY NEWID()) as rn
+              FROM Questions
+              WHERE level_id = @levelId
+              ORDER BY NEWID()
+            )
+            INSERT INTO ExamQuestions (exam_id, question_id, question_order)
+            SELECT @examId, question_id, rn
+            FROM RandomQuestions
+            ORDER BY rn
+          `);
+      } else {
+        // Obtener preguntas aleatorias de todos los niveles
+        await pool.request()
+          .input('examId', sql.Int, examId)
+          .input('questionCount', sql.Int, questionCount)
+          .query(`
+            WITH RandomQuestions AS (
+              SELECT TOP (@questionCount) 
+                question_id,
+                ROW_NUMBER() OVER (ORDER BY NEWID()) as rn
+              FROM Questions
+              ORDER BY NEWID()
+            )
+            INSERT INTO ExamQuestions (exam_id, question_id, question_order)
+            SELECT @examId, question_id, rn
+            FROM RandomQuestions
+            ORDER BY rn
+          `);
+      }
       
       return true;
     } catch (error) {

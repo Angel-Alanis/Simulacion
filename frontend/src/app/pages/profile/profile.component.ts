@@ -34,7 +34,7 @@ import { AuthService } from '../../core/services/auth.service';
               </div>
               <div class="info-item">
                 <span class="label">📅 Member Since:</span>
-                <span class="value">{{ formatDate(user.createdAt) }}</span>
+                <span class="value">{{ formatDate(user.created_at) }}</span>
               </div>
             </div>
           </div>
@@ -224,7 +224,21 @@ export class ProfileComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.user = this.authService.currentUserValue;
+    this.loadUserProfile();
+  }
+
+  loadUserProfile() {
+    this.authService.getUserProfile().subscribe({
+      next: (response) => {
+        if (response.success && response.data) {
+          this.user = response.data.user;
+        }
+      },
+      error: (err) => {
+        console.error('Error loading profile:', err);
+        this.user = this.authService.currentUserValue;
+      }
+    });
   }
 
   getInitials(): string {

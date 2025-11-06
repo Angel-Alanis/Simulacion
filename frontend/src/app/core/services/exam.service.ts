@@ -22,8 +22,8 @@ export class ExamService {
     return this.http.get(`${environment.apiUrl}/questions/levels`);
   }
 
-  startExam(examType: 'Practice' | 'Final'): Observable<ApiResponse<ExamSession>> {
-    return this.http.post<ApiResponse<ExamSession>>(`${this.apiUrl}/start`, { examType });
+  startExam(examType: 'Practice' | 'Final', levelId?: number): Observable<ApiResponse<ExamSession>> {
+    return this.http.post<ApiResponse<ExamSession>>(`${this.apiUrl}/start`, { examType, levelId });
   }
 
   submitAnswer(answer: Answer): Observable<ApiResponse<{ answerId: number; isCorrect: boolean }>> {

@@ -51,7 +51,8 @@ class UserController {
             userId: user.user_id,
             username: user.username,
             email: user.email,
-            fullName: user.full_name
+            fullName: user.full_name,
+            created_at: user.created_at
           },
           token
         }
@@ -71,7 +72,7 @@ class UserController {
     try {
       const { username, password } = req.body;
       
-      console.log('🔐 Intento de login:', { username, password: '***' });
+      console.log('Intento de login:', { username, password: '***' });
 
       // Buscar usuario por username o email
       let user = await UserModel.findByUsername(username);
@@ -79,7 +80,7 @@ class UserController {
         user = await UserModel.findByEmail(username);
       }
       
-      console.log('👤 Usuario encontrado:', user ? 'Sí' : 'No');
+      console.log('Usuario encontrado:', user ? 'Si' : 'No');
       
       if (!user) {
         return res.status(401).json({
@@ -113,7 +114,8 @@ class UserController {
             username: user.username,
             email: user.email,
             fullName: user.full_name,
-            currentLevel: user.current_level_name
+            currentLevel: user.current_level_name,
+            created_at: user.created_at
           },
           token
         }
@@ -151,7 +153,8 @@ class UserController {
             username: user.username,
             email: user.email,
             fullName: user.full_name,
-            currentLevel: user.current_level_name
+            currentLevel: user.current_level_name,
+            created_at: user.created_at
           },
           statistics: stats
         }

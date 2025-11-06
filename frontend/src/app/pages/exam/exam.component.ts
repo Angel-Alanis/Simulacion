@@ -71,7 +71,7 @@ interface ExamSession {
 
         <!-- Question Text -->
         <div class="question-text">
-          <h2>{{ question.questionOrder }}. {{ question.questionText }}</h2>
+          <h2>{{ currentQuestionIndex + 1 }}. {{ question.questionText }}</h2>
         </div>
 
         <!-- Options -->
@@ -279,14 +279,13 @@ interface ExamSession {
       border: 2px solid #e0e0e0;
       border-radius: 12px;
       cursor: pointer;
-      transition: all 0.3s;
+      transition: border-color 0.2s, background 0.2s;
       background: white;
     }
 
     .option-card:hover {
       border-color: #667eea;
       background: #f8f9ff;
-      transform: translateX(5px);
     }
 
     .option-card.selected {
@@ -483,7 +482,7 @@ export class ExamComponent implements OnInit, OnDestroy {
 
     const examTypeCapitalized = this.examType.charAt(0).toUpperCase() + this.examType.slice(1);
     
-    this.examService.startExam(examTypeCapitalized as 'Practice' | 'Final').subscribe({
+    this.examService.startExam(examTypeCapitalized as 'Practice' | 'Final', this.levelId).subscribe({
       next: (response: any) => {
         this.examSession = response.data;
         this.timeRemaining = this.examSession!.timeLimitPerQuestion;

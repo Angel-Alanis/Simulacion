@@ -7,10 +7,34 @@ class DashboardController {
       const userId = req.user.userId;
       const pool = await getConnection();
 
+      // Información del usuario
+      const userInfo = await pool.request()
+        .input('userId', sql.Int, userId)
+        .query(`
+          SELECT u.user_id, u.username, u.email, u.full_name, u.created_at, l.level_name as current_level_name
+          FROM Users u
+          LEFT JOIN Levels l ON u.current_level_id = l.level_id
+          WHERE u.user_id = @userId
+        `);
+
       // Estadísticas generales
       const userStats = await pool.request()
         .input('userId', sql.Int, userId)
         .query('SELECT * FROM vw_DashboardStats WHERE user_id = @userId');
+
+      // Intentos realizados por tipo de examen
+      const examAttempts = await pool.request()
+        .input('userId', sql.Int, userId)
+        .query(`
+          SELECT 
+            et.type_name,
+            et.max_attempts,
+            COUNT(e.exam_id) as attempts_used,
+            et.max_attempts - COUNT(e.exam_id) as attempts_remaining
+          FROM ExamTypes et
+          LEFT JOIN Exams e ON et.exam_type_id = e.exam_type_id AND e.user_id = @userId
+          GROUP BY et.type_name, et.max_attempts
+        `);
 
       // Comparación entre exámenes de práctica y finales
       const attemptsComparison = await pool.request()
@@ -101,7 +125,9 @@ class DashboardController {
       res.json({
         success: true,
         data: {
+          user: userInfo.recordset[0],
           userStatistics: userStats.recordset[0],
+          examAttempts: examAttempts.recordset,
           attemptsComparison: attemptsComparison.recordset,
           levelProgress: levelProgress.recordset,
           practiceBenefit: practiceBenefit.recordset[0],
