@@ -32,7 +32,9 @@ class DashboardController {
             COUNT(e.exam_id) as attempts_used,
             et.max_attempts - COUNT(e.exam_id) as attempts_remaining
           FROM ExamTypes et
-          LEFT JOIN Exams e ON et.exam_type_id = e.exam_type_id AND e.user_id = @userId
+          LEFT JOIN Exams e ON et.exam_type_id = e.exam_type_id 
+            AND e.user_id = @userId 
+            AND e.is_completed = 1
           GROUP BY et.type_name, et.max_attempts
         `);
 

@@ -27,6 +27,23 @@
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Username</mat-label>
+          <input 
+            matInput 
+            type="text" 
+            formControlName="username" 
+            placeholder="johndoe123"
+            autocomplete="username">
+          <mat-icon matPrefix>account_circle</mat-icon>
+          <mat-error *ngIf="f['username'].hasError('required')">
+            Username is required
+          </mat-error>
+          <mat-error *ngIf="f['username'].hasError('minlength')">
+            Username must be at least 3 characters
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
           <mat-label>Email</mat-label>
           <input 
             matInput 

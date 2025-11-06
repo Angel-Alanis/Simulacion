@@ -1,0 +1,111 @@
+===========================================
+USUARIOS DE PRUEBA - ENGLISH EXAM SIMULATOR
+===========================================
+
+Todos los usuarios tienen la misma contraseña: password123
+
+===========================================
+PERFILES CON EXÁMENES COMPLETADOS
+===========================================
+
+🏆 PERFIL AVANZADO: Juan Pérez
+  Username: juan_perez
+  Email: juan.perez@test.com
+  Password: password123
+  Nombre Completo: Juan Pérez García
+  Historial: 7 Practice + 1 Final
+  - 3 Practice Básico (65%, 75%, 85%)
+  - 2 Practice Intermedio (80%, 88%)
+  - 2 Practice Avanzado (90%, 92%)
+  - 1 Final (91% - APROBADO) 
+  Nivel Actual: Avanzado
+
+📚 PERFIL INTERMEDIO: María López
+  Username: maria_lopez
+  Email: maria.lopez@test.com
+  Password: password123
+  Nombre Completo: María López Rodríguez
+  Historial: 7 Practice + 2 Final
+  - 4 Practice Básico (55%, 65%, 70%, 75%)
+  - 3 Practice Intermedio (72%, 78%, 82%)
+  - 2 Final (68% FALLIDO, 77% APROBADO)
+  Nivel Actual: Intermedio
+
+📖 PERFIL BÁSICO: Carlos Sánchez
+  Username: carlos_sanchez
+  Email: carlos.sanchez@test.com
+  Password: password123
+  Nombre Completo: Carlos Sánchez Martínez
+  Historial: 7 Practice + 2 Final
+  - 5 Practice Básico (45%, 52%, 58%, 65%, 68% - todos fallidos)
+  - 2 Practice Intermedio (55%, 62% - ambos fallidos)
+  - 2 Final (60%, 66% - ambos fallidos)
+  Nivel Actual: Básico
+
+===========================================
+USUARIOS SIN EXÁMENES (para pruebas)
+===========================================
+
+Usuario 1:
+  Username: juan_perez
+  Email: juan.perez@test.com
+  Password: password123
+  Nombre Completo: Juan Pérez García (ahora con exámenes - ver arriba)
+
+Usuario 2:
+  Username: maria_lopez
+  Email: maria.lopez@test.com
+  Password: password123
+  Nombre Completo: María López Rodríguez (ahora con exámenes - ver arriba)
+
+Usuario 3:
+  Username: carlos_sanchez
+  Email: carlos.sanchez@test.com
+  Password: password123
+  Nombre Completo: Carlos Sánchez Martínez (ahora con exámenes - ver arriba)
+
+Usuario 4:
+  Username: ana_torres
+  Email: ana.torres@test.com
+  Password: password123
+  Nombre Completo: Ana Torres Fernández
+
+Usuario 5:
+  Username: luis_ramirez
+  Email: luis.ramirez@test.com
+  Password: password123
+  Nombre Completo: Luis Ramírez González
+
+Usuario 6:
+  Username: sofia_cruz
+  Email: sofia.cruz@test.com
+  Password: password123
+  Nombre Completo: Sofía Cruz Morales
+
+Usuario 7:
+  Username: pedro_diaz
+  Email: pedro.diaz@test.com
+  Password: password123
+  Nombre Completo: Pedro Díaz Herrera
+
+Usuario 8:
+  Username: laura_ruiz
+  Email: laura.ruiz@test.com
+  Password: password123
+  Nombre Completo: Laura Ruiz Castro
+
+Usuario 9:
+  Username: miguel_flores
+  Email: miguel.flores@test.com
+  Password: password123
+  Nombre Completo: Miguel Flores Ortiz
+
+Usuario 10:
+  Username: elena_vargas
+  Email: elena.vargas@test.com
+  Password: password123
+  Nombre Completo: Elena Vargas Mendoza
+
+===========================================
+NOTA: Puedes iniciar sesión con el username o el email
+===========================================

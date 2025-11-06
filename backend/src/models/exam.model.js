@@ -10,10 +10,11 @@ class ExamModel {
         .input('userId', sql.Int, examData.userId)
         .input('examTypeId', sql.Int, examData.examTypeId)
         .input('attemptNumber', sql.Int, examData.attemptNumber)
+        .input('examLevelId', sql.Int, examData.examLevelId || null)
         .query(`
-          INSERT INTO Exams (user_id, exam_type_id, start_time, attempt_number, is_completed)
+          INSERT INTO Exams (user_id, exam_type_id, start_time, attempt_number, exam_level_id, is_completed)
           OUTPUT INSERTED.*
-          VALUES (@userId, @examTypeId, GETDATE(), @attemptNumber, 0)
+          VALUES (@userId, @examTypeId, GETDATE(), @attemptNumber, @examLevelId, 0)
         `);
       
       return result.recordset[0];
@@ -383,10 +384,14 @@ class ExamModel {
             e.attempt_number,
             e.is_completed,
             et.type_name as exam_type,
-            l.level_name as level_achieved
+            CASE 
+              WHEN e.exam_level_id IS NOT NULL THEN el.level_name
+              ELSE la.level_name
+            END as level_achieved
           FROM Exams e
           INNER JOIN ExamTypes et ON e.exam_type_id = et.exam_type_id
-          LEFT JOIN Levels l ON e.level_achieved_id = l.level_id
+          LEFT JOIN Levels la ON e.level_achieved_id = la.level_id
+          LEFT JOIN Levels el ON e.exam_level_id = el.level_id
           WHERE e.user_id = @userId
           ORDER BY e.start_time DESC
         `);

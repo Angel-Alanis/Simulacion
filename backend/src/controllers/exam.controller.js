@@ -30,7 +30,8 @@ class ExamController {
       const exam = await ExamModel.create({
         userId,
         examTypeId: examTypeData.exam_type_id,
-        attemptNumber: attempts + 1
+        attemptNumber: attempts + 1,
+        examLevelId: examType === 'Practice' ? levelId : null
       });
 
       // Seleccionar preguntas al azar (con nivel específico si es Practice)
